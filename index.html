@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>사진으로 SNS 초안 만들기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>사진으로 SNS 초안 만들기</h1>
+      <p>사진을 올리면 인스타그램과 스레드 포스팅 초안을 만들어 드려요.</p>
+    </header>
+
+    <section id="upload">
+      <label id="drop" for="file" tabindex="0">
+        <img id="preview" alt="" hidden>
+        <span id="drop-hint">사진을 끌어놓거나 눌러서 선택하세요<br><small>jpg · png · webp, 최대 5MB</small></span>
+      </label>
+      <input id="file" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+
+      <label class="tone">
+        원하는 톤 <span>(선택)</span>
+        <input id="tone" type="text" maxlength="40" placeholder="예: 담백하게, 유머러스하게">
+      </label>
+
+      <button id="go" type="button" disabled>초안 만들기</button>
+    </section>
+
+    <section id="status" hidden aria-live="polite">
+      <ol>
+        <li id="step1">사진 특성 추출 중</li>
+        <li id="step2">초안 작성 중</li>
+      </ol>
+    </section>
+
+    <p id="error" role="alert" hidden></p>
+
+    <section id="features" hidden>
+      <h2>사진 특성</h2>
+      <dl id="features-list"></dl>
+    </section>
+
+    <section id="result" hidden>
+      <div class="result-head">
+        <h2>포스팅 초안</h2>
+        <button id="regen" type="button" class="ghost">다시 생성</button>
+      </div>
+      <div class="cards">
+        <article class="card" id="card-instagram">
+          <h3>인스타그램 <span class="count"></span></h3>
+          <pre class="text"></pre>
+          <button type="button" class="copy">복사</button>
+        </article>
+        <article class="card" id="card-threads">
+          <h3>스레드 <span class="count"></span></h3>
+          <pre class="text"></pre>
+          <button type="button" class="copy">복사</button>
+        </article>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
