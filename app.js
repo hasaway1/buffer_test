@@ -184,6 +184,62 @@ for (const ev of ["dragleave", "drop"]) {
   el.drop.addEventListener(ev, (e) => { e.preventDefault(); el.drop.classList.remove("over"); });
 }
 el.drop.addEventListener("drop", (e) => handleFile(e.dataTransfer.files[0]));
+const draftTexts = () => ({
+  instagram: $("card-instagram").querySelector(".text").textContent,
+  threads: $("card-threads").querySelector(".text").textContent,
+});
+
+function setMsg(text) {
+  const msg = $("mail-msg");
+  msg.hidden = !text;
+  msg.textContent = text;
+}
+
+async function sendMail(to) {
+  const btn = $("mail");
+  setMsg("메일 보내는 중...");
+  btn.disabled = true;
+  try {
+    await callFunction("send-mail", { to, ...draftTexts() });
+    setMsg(`${to}(으)로 메일을 보냈어요.`);
+  } catch (e) {
+    setMsg(e.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function registerBuffer() {
+  const btn = $("buffer");
+  setMsg("Buffer에 초안 등록 중...");
+  btn.disabled = true;
+  try {
+    const { results, availableServices } = await callFunction("register-buffer", draftTexts());
+    const lines = results.map((r) => (r.ok ? `✓ ${r.label}: Buffer 초안으로 등록했어요.` : `✗ ${r.label}: ${r.error}`));
+    if (results.some((r) => !r.ok) && availableServices?.length) {
+      lines.push(`(Buffer에 연결된 채널: ${availableServices.join(", ")})`);
+    }
+    setMsg(lines.join("\n"));
+  } catch (e) {
+    setMsg(e.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+const mailDialog = $("mail-dialog");
+$("mail").addEventListener("click", () => {
+  $("mail-to").value = "";
+  mailDialog.showModal();
+  $("mail-to").focus();
+});
+$("mail-cancel").addEventListener("click", () => mailDialog.close());
+$("mail-form").addEventListener("submit", () => {
+  const to = $("mail-to").value.trim();
+  if (to) sendMail(to);
+});
+$("buffer").addEventListener("click", registerBuffer);
+
 el.go.addEventListener("click", run);
 el.regen.addEventListener("click", regenerate);
 

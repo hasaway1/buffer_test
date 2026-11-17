@@ -45,8 +45,13 @@
     <section id="result" hidden>
       <div class="result-head">
         <h2>포스팅 초안</h2>
-        <button id="regen" type="button" class="ghost">다시 생성</button>
+        <div class="actions">
+          <button id="mail" type="button" class="ghost">메일로 보내기</button>
+          <button id="buffer" type="button" class="ghost">초안 등록</button>
+          <button id="regen" type="button" class="ghost">다시 생성</button>
+        </div>
       </div>
+      <p id="mail-msg" hidden></p>
       <div class="cards">
         <article class="card" id="card-instagram">
           <h3>인스타그램 <span class="count"></span></h3>
@@ -61,6 +66,18 @@
       </div>
     </section>
   </main>
+
+  <dialog id="mail-dialog">
+    <form method="dialog" id="mail-form">
+      <h2>메일로 보내기</h2>
+      <p>받는 사람(상급자)의 이메일 주소를 입력하세요.</p>
+      <input id="mail-to" type="email" required placeholder="name@example.com" autocomplete="email">
+      <div class="dialog-actions">
+        <button type="button" id="mail-cancel" class="ghost">취소</button>
+        <button type="submit" id="mail-send">보내기</button>
+      </div>
+    </form>
+  </dialog>
   <script src="app.js"></script>
 </body>
 </html>

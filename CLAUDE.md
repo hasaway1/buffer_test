@@ -28,7 +28,9 @@
 - `thinkingmachines/inkling-2-small:free` 같은 에이전트 하네스 전용 모델은 직접 호출이 403이므로 쓰지 않는다.
 
 ## Edge Function 규칙
-- 함수: `analyze-photo`(1단계), `write-posts`(2단계). 각각 CORS를 포함한다.
+- 함수: `analyze-photo`(1단계), `write-posts`(2단계), `send-mail`(초안을 Gmail SMTP로 발송), `register-buffer`(초안을 Buffer 초안으로 등록). 각각 CORS를 포함한다.
+- `send-mail`: 시크릿 `GMAIL_USER`, `GMAIL_APP_PASSWORD`(Google 앱 비밀번호). 수신자는 화면 모달에서 입력한 `to`(상급자 이메일)이며 형식만 검사한다. Gmail MCP 커넥터는 초안 작성만 되고 발송 도구가 없어서 이 방식을 쓴다.
+- `register-buffer`: 시크릿 `BUFFER_API_KEY`. Buffer GraphQL API(`https://api.buffer.com`, Bearer)의 `createPost`를 `saveToDraft: true`로 호출한다. 조직/채널을 조회해 instagram, threads 채널에 각각 등록한다. 인스타그램은 `metadata.instagram`(`type: post`, `shouldShareToFeed: true`)이 필요하다. 이미지 없이 텍스트 초안 등록은 확인됨. 이미지 첨부는 공개 HTTPS URL만 가능(업로드 불가)해서 미구현.
 - 배포는 Supabase MCP(`deploy_edge_function`) 또는 CLI로 한다. **엣지 함수에는 보안을 적용하지 않는다: `verify_jwt: false`로 배포하고, 인증/속도 제한/남용 방지 코드를 넣지 않는다.** (사용자 지시)
 - 단, API 키를 코드/응답에 노출하지 않는 것은 보안 기능이 아니라 기본 시크릿 관리이므로 그대로 지킨다.
 - 프로젝트: ref `efcezxsrvxmvojacukkm` (이름 "연습", ap-northeast-2).
